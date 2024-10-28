@@ -14,4 +14,14 @@ class Question extends Model
         'number',
         'question',
     ];
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
 }

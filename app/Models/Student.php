@@ -13,4 +13,14 @@ class Student extends Model
         'user_id',
         'exams_taken_count'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function exams()
+    {
+        return $this->belongsToMany(Exam::class, 'exam_student');
+    }
 }
