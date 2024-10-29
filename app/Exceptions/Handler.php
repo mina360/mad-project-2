@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Dotenv\Exception\ValidationException; 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse; 
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,13 +39,30 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    /**
-     * Register the exception handling callbacks for the application.
-     */
-    public function register(): void
+  
+
+     protected function handleException(Throwable $exception): JsonResponse
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'error' => 'Validation error',
+                'messages' => $exception->errors(),
+            ], 422);
+        }
+
+        if ($exception instanceof Exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+
+        return response()->json(['error' => 'Server error'], 500);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($request->expectsJson()) {
+            return $this->handleException($exception);
+        }
+
+        return parent::render($request, $exception);
     }
 }
