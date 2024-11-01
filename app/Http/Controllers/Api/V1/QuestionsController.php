@@ -20,10 +20,7 @@ class QuestionsController extends Controller
     public function store(AddQuestionsRequest $request)
     {
         try {
-            if (Auth::user()->role != 'teacher') {
-                throw new Exception("Not Authorized", 401);
-            }
-
+            $this->authorize('create', Question::class);
             $question = $this->questionService->addQuestion($request->validated());
 
             return response()->json([
@@ -31,15 +28,13 @@ class QuestionsController extends Controller
                 'question' => $question
             ]);
         } catch (Exception $e) {
-            throw new RuntimeException('question creation failed');
+            throw new RuntimeException('question creation failed from controller: ' . $e->getMessage());
         }
     }
 
     public function destroy(Question $question)
     {
-        if (Auth::user()->role != 'teacher') {
-            throw new Exception("Not Authorized", 401);
-        }
+        $this->authorize('delete', Question::class);
         $deleteQuestion = $this->questionService->deleteQuestion($question);
         return response()->json([
             'message' => 'Question Deleted Successfully.',

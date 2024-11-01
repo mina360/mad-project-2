@@ -18,6 +18,7 @@ class QuestionService
         return DB::transaction(function () use ($data) {
             $availability = $this->examService->checkExamsQuestions($data['exam_id']);
             $question = Question::create($data);
+            Log::info("question received", [$question]);
 
             if (!$question) {
                 throw new RuntimeException('question creation failed');

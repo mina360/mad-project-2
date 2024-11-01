@@ -19,11 +19,7 @@ class AnswerController extends Controller
     public function store(AddAnswerRequest $request)
     {
         try {
-            code:
-            if (Auth::user()->role != 'teacher') {
-                throw new Exception("Not Authorized", 401);
-            }
-
+            $this->authorize('create', Answer::class);
             $validatedData = $request->validated();
 
             $validatedData['is_correct'] = AnswerIsCorrect::fromBoolean($request->is_correct === 'true');
@@ -42,9 +38,7 @@ class AnswerController extends Controller
 
     public function destroy(Answer $answer)
     {
-        if (Auth::user()->role != 'teacher') {
-            throw new Exception("Not Authorized", 401);
-        }
+        $this->authorize('delete', Answer::class);
         $deletedAnswer = $this->answerService->deleteAnswer($answer);
         return response()->json([
             'message' => 'Answer Deleted Successfully.',
