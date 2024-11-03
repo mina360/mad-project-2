@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use Dotenv\Exception\ValidationException; 
+use Illuminate\Validation\ValidationException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse; 
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-  
+
 
      protected function handleException(Throwable $exception): JsonResponse
     {
