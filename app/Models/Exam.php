@@ -29,4 +29,9 @@ class Exam extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function isValidQuestion($question_id)
+    {
+        return $this->questions()->contains('id', $question_id);
+    }
 }

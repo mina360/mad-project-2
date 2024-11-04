@@ -20,4 +20,14 @@ class ExamStudent extends Model
     protected $casts = [
         'status' => ExamStatus::class,
     ];
+
+    public function solves()
+    {
+        return $this->hasMany(Solve::class);
+    }
+
+    public function updateScore($score)
+    {
+        return $this->score = $score;
+    }
 }
