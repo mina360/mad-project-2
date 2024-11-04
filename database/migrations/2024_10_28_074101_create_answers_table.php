@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('answer');
             $table->boolean('is_correct');
-            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();            $table->timestamps();
+            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

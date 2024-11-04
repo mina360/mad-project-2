@@ -24,4 +24,14 @@ class Question extends Model
     {
         return $this->hasMany(Answer::class);
     }
+
+    public function solves()
+    {
+        return $this->hasMany(Solve::class);
+    }
+
+    public function isValidAnswer($answer_id)
+    {
+        return $this->answers->contains('id', $answer_id);
+    }
 }

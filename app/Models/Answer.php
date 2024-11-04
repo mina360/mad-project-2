@@ -11,7 +11,6 @@ class Answer extends Model
 
     protected $fillabe = [
         'question_id',
-        'choice',
         'answer',
         'is_correct',
     ];
@@ -19,5 +18,15 @@ class Answer extends Model
     public function question()
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function solves()
+    {
+        return $this->hasMany(Solve::class);
+    }
+
+    public function isCorrect()
+    {
+        return $this->is_correct ? true : false;
     }
 }

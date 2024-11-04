@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateExamRequest;
+use Exception;
 use App\Models\Exam;
 use App\Services\ExamService;
-use Exception;
+use App\Http\Requests\CreateExamRequest;
 
 class ExamController extends Controller
 {

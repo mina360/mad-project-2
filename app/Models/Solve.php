@@ -15,4 +15,27 @@ class Solve extends Model
         'answer_id',
         'attempt'
     ];
+
+    public function examStudent()
+    {
+        return $this->belongsTo(ExamStudent::class);
+    }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function answer()
+    {
+        return $this->belongsTo(Answer::class);
+    }
+
+    public function incrementAttempt()
+    {
+        if ($this->attempt < 3) {
+            return $this->increment('attempt');
+        }
+        return $this;
+    }
 }
