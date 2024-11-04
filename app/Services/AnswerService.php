@@ -24,11 +24,4 @@ class AnswerService
             return $answer;
         });
     }
-
-    public function deleteAnswer(Answer $answer)
-    {
-        $answer->delete();
-
-        return $answer;
-    }
 }

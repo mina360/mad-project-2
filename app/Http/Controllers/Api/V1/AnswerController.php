@@ -11,6 +11,7 @@ use Exception;
 use RuntimeException;
 use App\Models\Answer;
 use App\Services\AnswerService;
+use Illuminate\Support\Facades\Log;
 
 class AnswerController extends Controller
 {
@@ -20,26 +21,25 @@ class AnswerController extends Controller
     {
         try {
             $this->authorize('create', Answer::class);
-            $validatedData = $request->validated();
-
-            $validatedData['is_correct'] = AnswerIsCorrect::fromBoolean($request->is_correct === 'true');
-
-            // Create the answer
-            $answer = $this->answerService->addAnswer($validatedData);
+            $answer = $this->answerService->addAnswer($request->validated());
 
             return response()->json([
                 'message' => 'Answer Created Successfully',
                 'answer' => $answer
-            ]);
+            ], 201);
         } catch (Exception $e) {
-            throw new RuntimeException('Answer creation failed: ' . $e->getMessage());
+            Log::error('Answer creation failed: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Answer creation failed: ' . $e->getMessage()
+            ], 500);
         }
     }
+
 
     public function destroy(Answer $answer)
     {
         $this->authorize('delete', Answer::class);
-        $deletedAnswer = $this->answerService->deleteAnswer($answer);
+        $deletedAnswer = $answer->delete();
         return response()->json([
             'message' => 'Answer Deleted Successfully.',
             'deleted_answer' => $deletedAnswer

@@ -16,9 +16,8 @@ class QuestionService
     public function addQuestion(array $data): Question
     {
         return DB::transaction(function () use ($data) {
-            $availability = $this->examService->checkExamsQuestions($data['exam_id']);
+            $this->examService->checkExamsQuestions($data['exam_id']);
             $question = Question::create($data);
-            Log::info("question received", [$question]);
 
             if (!$question) {
                 throw new RuntimeException('question creation failed');
@@ -26,12 +25,5 @@ class QuestionService
 
             return $question;
         });
-    }
-
-    public function deleteQuestion(Question $question)
-    {
-        $question->delete();
-
-        return $question;
     }
 }

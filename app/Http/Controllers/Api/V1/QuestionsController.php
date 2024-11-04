@@ -35,7 +35,7 @@ class QuestionsController extends Controller
     public function destroy(Question $question)
     {
         $this->authorize('delete', Question::class);
-        $deleteQuestion = $this->questionService->deleteQuestion($question);
+        $deleteQuestion = $question->delete();
         return response()->json([
             'message' => 'Question Deleted Successfully.',
             'Deleted Question' => $deleteQuestion

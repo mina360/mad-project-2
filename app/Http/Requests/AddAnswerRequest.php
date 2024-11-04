@@ -24,7 +24,7 @@ class AddAnswerRequest extends FormRequest
         return [
             //
             'answer' => "required|string|max:255",
-            "is_correct" => "required|string",
+            "is_correct" => "required|boolean",
             "question_id" => "required|exists:questions,id"
         ];
     }
