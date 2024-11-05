@@ -9,10 +9,9 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $fillabe = [
-        'exam_id',
-        'number',
+    protected $fillable = [
         'question',
+        'exam_id',
     ];
 
     public function exam()
