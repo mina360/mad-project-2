@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+
 use App\Models\Exam;
 use App\Models\Question;
 use RuntimeException;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ExamService
 {
@@ -26,4 +29,36 @@ class ExamService
 
         return $exam;
     }
+
+    public function createExam($request)
+    {
+        if (Auth::user()->role != 'teacher') {
+            throw new Exception('You cannot add an exam.');
+        }
+
+        $exam = Exam::create([
+            'teacher_id' => Auth::id(),
+            'title' => $request->title,
+            'num_of_questions' => $request->num_of_questions
+        ]);
+
+        return $exam;
+    }
+
+    public function deleteExam($exam)
+    {
+        if (!$this->verifyExamOwner($exam)) {
+            throw new Exception('You cannot delete this exam.');
+        }
+
+        $exam->delete();
+
+        return $exam;
+    }
+
+    public function verifyExamOwner($exam)
+    {
+        return $exam->teacher_id == Auth::id();
+    }
+
 }
