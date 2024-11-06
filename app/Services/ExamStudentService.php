@@ -15,8 +15,9 @@ class ExamStudentService
             'exam_id' => $exam->id,
             'student_id' => $student->id,
             'score' => 0,
-            'status' => ExamStatus::InProgress
+            'status' => ExamStatus::InProgress,
         ]);
+        $exam_student->incrementAttempt();
 
         return $exam_student;
     }

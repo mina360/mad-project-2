@@ -13,7 +13,6 @@ class Solve extends Model
         'exam_student_id',
         'question_id',
         'answer_id',
-        'attempt'
     ];
 
     public function examStudent()
@@ -29,13 +28,5 @@ class Solve extends Model
     public function answer()
     {
         return $this->belongsTo(Answer::class);
-    }
-
-    public function incrementAttempt()
-    {
-        if ($this->attempt < 3) {
-            return $this->increment('attempt');
-        }
-        return $this;
     }
 }

@@ -17,7 +17,10 @@ return new class extends Migration
             $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
             $table->integer('score')->max(100)->min(0);
+            $table->integer('correct_answers_count')->default(0);
             $table->enum('status', array_column(ExamStatus::cases(), 'value'))->default(value: ExamStatus::Scheduled->value);
+            $table->integer('attempt')->max(3)->default(0);
+            $table->timestamp('attempted_at')->nullable();
             $table->timestamps();
         });
     }

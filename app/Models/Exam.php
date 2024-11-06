@@ -9,7 +9,7 @@ class Exam extends Model
 {
     use HasFactory;
 
-    protected $fillabe = [
+    protected $fillable = [
         'title',
         'teacher_id',
         'num_of_questions'

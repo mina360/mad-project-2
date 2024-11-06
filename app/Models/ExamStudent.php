@@ -10,11 +10,14 @@ class ExamStudent extends Model
 {
     use HasFactory;
 
-    protected $fillabe = [
+    protected $fillable = [
         'exam_id',
         'student_id',
         'score',
         'status',
+        'attempt',
+        'attempted_at',
+        'correct_answers_count'
     ];
 
     protected $casts = [
@@ -29,5 +32,22 @@ class ExamStudent extends Model
     public function updateScore($score)
     {
         return $this->score = $score;
+    }
+
+    public function incrementAttempt()
+    {
+        if (now() > $this->attempted_at->addMonths(6) && $this->attempt < 3) {
+            $this->increment('attempt');
+            $this->attempted_at = now();
+        }
+        return $this;
+    }
+    public function incrementCorrectAnswersCount()
+    {
+        return $this->increment('correct_answers_count');
+    }
+    public function updateExamStatus()
+    {
+        return $this->correct_answers_count >= 60 ? ExamStatus::Passed : ExamStatus::Failed;
     }
 }

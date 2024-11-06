@@ -24,10 +24,30 @@ class SolveController extends Controller
         $this->solveService = $solveService;
         $this->examStudentService = $examStudentService;
     }
-    public function addAnswer(SolveRequest $request, Exam $exam)
+
+    public function takeExam(Exam $exam)
     {
-        $correct_answers_count = 0;
-        $correct_questions = [];
+        if (Auth::user()->role != 'student') {
+            return new Exception("You are not allowed to take exams.");
+        }
+
+        $exam_student = $this->examStudentService->createExamStudent($exam);
+        return response()->json([
+            'Exam Student' => $exam_student
+        ]);
+    }
+    public function addSolve(SolveRequest $request, Exam $exam)
+    {
+        if (Auth::user()->role != 'student') {
+            return new Exception("You are not allowed to take exams.");
+        }
+        $exam_student = ExamStudent::where([
+            'exam_id' => $exam->id,
+            'student_id' => Auth::id(),
+        ])->first();
+        if (!$exam_student) {
+            return new Exception("ExamStudent not found.");
+        }
         $question = Question::find($request['question_id']);
         $student_answer = Answer::find($request['answer_id']);
         if (! $exam->isValidQuestion($question)) {
@@ -36,19 +56,27 @@ class SolveController extends Controller
         if (! $question->isValidAnswer($student_answer)) {
             return new Exception("Invalid answer");
         }
-        $exam_student = $examStudentService->createExamStudent($exam);
-        $solve = $solveService->createSolveAndIncrementAttempt($request, $exam_student);
+        $solve = $this->solveService->createSolve($request, $exam_student);
+
+        $correct_questions = [];
         if ($student_answer->isCorrect()) {
-            $correct_answers_count += 1;
+            $exam_student->incrementCorrectAnswersCount();
             $correct_questions[] = $student_answer->question->id;
-            $exam_student->updateScore($correct_answers_count);
         }
-        $exam_status = $correct_answers_count >= 60 ? "passed" : "failed";
         return response()->json([
-            "student's solve" => $solve,
-            'status' => $exam_status,
-            'score/mark' => $correct_answers_count,
-            'total questions' => $correct_questions
+            'Your solve' => $solve,
+            'Correct questions' => $correct_questions
+        ]);
+    }
+    public function calculateScore(ExamStudent $exam_student)
+    {
+        if (! $exam_student) {
+            return new Exception("ExamStudent not found.");
+        }
+        $exam_student->updateScore($exam_student->correct_answers_count);
+        $exam_student->updateExamStatus();
+        return response()->json([
+            'score' => $exam_student->score
         ]);
     }
 }
