@@ -30,7 +30,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('isStudent', function (User $user) {
-            return ($user->role === 'student') ? true : false;
+            return ($user->role === 'student');
+        });
+        Gate::define('isExamStudentOwner', function (User $user, ExamStudent $exam_student) {
+            return ($user->id === $exam_student->student_id);
         });
     }
 }

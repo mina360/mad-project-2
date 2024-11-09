@@ -28,9 +28,8 @@ class SolveController extends Controller
 
     public function takeExam($exam_id)
     {
-        $user = Auth::user();
         if (Gate::denies('isStudent')) {
-            return new Exception("You are not allowed to take exams.");
+            throw new Exception("You are not allowed to take exams.");
         }
         $exam_student = $this->examStudentService->createExamStudent($exam_id);
         return response()->json([
@@ -45,28 +44,30 @@ class SolveController extends Controller
             'student_id' => $user_id,
         ])->first();
         if (!$exam_student) {
-            return new Exception("ExamStudent not found.");
+            throw new Exception("ExamStudent not found.");
         }
         if ($exam_student->status != ExamStatus::InProgress) {
-            return new Exception("You finished exam or you didn't start it.");
+            throw new Exception("You finished exam or you didn't start it.");
         }
         return $exam_student;
     }
     public function addSolve(SolveRequest $request, $exam_id)
     {
-        $user = Auth::user();
         if (Gate::denies('isStudent')) {
-            return new Exception("You are not allowed to take exams.");
+            throw new Exception("You are not allowed to take exams.");
+        }
+        if (Gate::denies('isExamStudentOwner')) {
+            throw new Exception("You are not allowed to take this exam.");
         }
         $exam_student = $this->getExam($exam_id);
         $exam = Exam::find($exam_id);
         $question = Question::find($request['question_id']);
         $student_answer = Answer::find($request['answer_id']);
         if (! $exam->isValidQuestion($question->id)) {
-            return new Exception("Invalid question");
+            throw new Exception("Invalid question");
         }
         if (! $question->isValidAnswer($student_answer->id)) {
-            return new Exception("Invalid answer");
+            throw new Exception("Invalid answer");
         }
         $solve = null;
         DB::transaction(function () use ($exam_student, $student_answer, $request, &$solve) {
@@ -82,11 +83,10 @@ class SolveController extends Controller
     }
     public function calculateScore($exam_student_id)
     {
-        $user_id = Auth::id();
         $exam_student = ExamStudent::findOrFail($exam_student_id);
         $this->authorize('viewResult', $exam_student);
         if (! $this->checkExamIfFinished($exam_student)) {
-            return new Exception("You can't calculate your score until you solve all the questions in this exam.");
+            throw new Exception("You can't calculate your score until you solve all the questions in this exam.");
         }
         $exam_student->updateScore($exam_student->correct_answers_count);
         $result = $exam_student->getExamResult();
