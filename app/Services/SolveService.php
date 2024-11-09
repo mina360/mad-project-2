@@ -8,7 +8,7 @@ class SolveService
 {
     public function createSolve($request, $exam_student)
     {
-        $solve = Solve::create([
+        $solve = Solve::firstOrCreate([
             'exam_student_id' => $exam_student->id,
             'question_id' => $request['question_id'],
             'answer_id' => $request['answer_id'],

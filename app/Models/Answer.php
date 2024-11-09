@@ -24,9 +24,4 @@ class Answer extends Model
     {
         return $this->hasMany(Solve::class);
     }
-
-    public function isCorrect()
-    {
-        return $this->is_correct ? true : false;
-    }
 }

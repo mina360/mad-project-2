@@ -32,6 +32,6 @@ class Exam extends Model
 
     public function isValidQuestion($question_id)
     {
-        return $this->questions()->contains('id', $question_id);
+        return $this->questions()->where('id', $question_id)->exists();
     }
 }

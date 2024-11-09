@@ -29,4 +29,9 @@ class Solve extends Model
     {
         return $this->belongsTo(Answer::class);
     }
+
+    public function countAnswers($exam_student_id)
+    {
+        return $this->where('exam_student_id', $exam_student_id)->count();
+    }
 }

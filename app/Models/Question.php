@@ -31,6 +31,6 @@ class Question extends Model
 
     public function isValidAnswer($answer_id)
     {
-        return $this->answers->contains('id', $answer_id);
+        return $this->answers()->where('id', $answer_id)->exists();
     }
 }

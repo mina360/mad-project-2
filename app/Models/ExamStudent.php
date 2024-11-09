@@ -31,7 +31,9 @@ class ExamStudent extends Model
 
     public function updateScore($score)
     {
-        return $this->score = $score;
+        $this->score = $score;
+        $this->save();
+        return $this;
     }
 
     public function incrementAttempt()
@@ -46,8 +48,9 @@ class ExamStudent extends Model
     {
         return $this->increment('correct_answers_count');
     }
-    public function updateExamStatus()
+    public function getExamResult()
     {
-        return $this->correct_answers_count >= 60 ? ExamStatus::Passed : ExamStatus::Failed;
+        $this->correct_answers_count >= 60 ? ExamStatus::Passed : ExamStatus::Failed;
+        return $this->status;
     }
 }
