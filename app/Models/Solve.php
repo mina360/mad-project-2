@@ -13,6 +13,25 @@ class Solve extends Model
         'exam_student_id',
         'question_id',
         'answer_id',
-        'attempt'
     ];
+
+    public function examStudent()
+    {
+        return $this->belongsTo(ExamStudent::class);
+    }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function answer()
+    {
+        return $this->belongsTo(Answer::class);
+    }
+
+    public function countAnswers($exam_student_id)
+    {
+        return $this->where('exam_student_id', $exam_student_id)->count();
+    }
 }

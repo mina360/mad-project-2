@@ -9,7 +9,7 @@ class Exam extends Model
 {
     use HasFactory;
 
-    protected $fillabe = [
+    protected $fillable = [
         'title',
         'teacher_id',
         'num_of_questions'
@@ -28,5 +28,10 @@ class Exam extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function isValidQuestion($question_id)
+    {
+        return $this->questions()->where('id', $question_id)->exists();
     }
 }

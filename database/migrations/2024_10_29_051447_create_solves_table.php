@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('solves', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_student_id')->constrained('exam_student')->cascadeOnDelete();
+            $table->foreignId('exam_student_id')->constrained('exam_students')->cascadeOnDelete();
             $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
             $table->foreignId('answer_id')->constrained('answers')->cascadeOnDelete();
-            $table->integer('attempt')->min(1)->max(3)->default(1);
             $table->timestamps();
         });
     }

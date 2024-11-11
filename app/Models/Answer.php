@@ -21,7 +21,14 @@ class Answer extends Model
         return $this->belongsTo(Question::class);
     }
 
+
+    public function solves()
+    {
+        return $this->hasMany(Solve::class);
+    }
+
     protected $casts = [
         'is_correct' => AnswerIsCorrect::class,
     ];
+
 }
